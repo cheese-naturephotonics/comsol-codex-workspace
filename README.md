@@ -26,6 +26,12 @@ Use Codex to control a local COMSOL session, keep the native COMSOL Desktop visi
 - Python 3.11 available through `py -3.11`
 - Codex desktop app
 
+If COMSOL is not discoverable from `PATH`, set one of these environment variables
+to the `...\Multiphysics` install directory before running the setup or plugin:
+
+- `COMSOL_MCP_COMSOL_ROOT`
+- `COMSOL_ROOT`
+
 ## Quick start
 
 1. Clone this repository.

@@ -8,11 +8,13 @@ the backend explicitly.
 from __future__ import annotations
 
 from contextlib import contextmanager
+from functools import lru_cache
 from pathlib import Path
 from typing import Iterator
 import faulthandler
 import os
 import re
+import shutil
 import subprocess
 import time
 
@@ -22,12 +24,71 @@ from mph import discovery
 from mph.client import Client
 
 
-COMSOL_ROOT = Path(r"D:\software\comsol\COMSOL53a\Multiphysics")
-COMSOL_BIN = COMSOL_ROOT / "bin" / "win64"
-COMSOL_EXE = COMSOL_BIN / "comsol.exe"
-COMSOL_SERVER_EXE = COMSOL_BIN / "comsolmphserver.exe"
-COMSOL_MPHCLIENT_EXE = COMSOL_BIN / "comsolmphclient.exe"
-COMSOL_JVM = COMSOL_ROOT / "java" / "win64" / "jre" / "bin" / "server" / "jvm.dll"
+COMSOL_ROOT_ENV_VARS = ("COMSOL_MCP_COMSOL_ROOT", "COMSOL_ROOT")
+
+
+def _installation_from_executable(executable: str | None) -> Path | None:
+    if not executable:
+        return None
+    path = Path(executable).resolve()
+    if path.name.lower() not in {"comsol.exe", "comsolmphserver.exe", "comsolmphclient.exe"}:
+        return None
+    parents = path.parents
+    if len(parents) < 3:
+        return None
+    root = parents[2]
+    return root if root.name == "Multiphysics" else None
+
+
+def _common_install_roots() -> list[Path]:
+    roots: list[Path] = []
+    for base_env in ("ProgramFiles", "ProgramW6432", "ProgramFiles(x86)"):
+        base = os.environ.get(base_env)
+        if not base:
+            continue
+        comsol_dir = Path(base) / "COMSOL"
+        if not comsol_dir.exists():
+            continue
+        roots.extend(sorted(comsol_dir.glob("COMSOL*/Multiphysics"), reverse=True))
+    return roots
+
+
+@lru_cache(maxsize=1)
+def _resolve_comsol_root() -> Path:
+    for env_var in COMSOL_ROOT_ENV_VARS:
+        configured = os.environ.get(env_var)
+        if configured:
+            candidate = Path(configured).expanduser()
+            if candidate.exists():
+                return candidate
+
+    for command in ("comsolmphserver.exe", "comsol.exe", "comsolmphclient.exe"):
+        candidate = _installation_from_executable(shutil.which(command))
+        if candidate and candidate.exists():
+            return candidate
+
+    for candidate in _common_install_roots():
+        if candidate.exists():
+            return candidate
+
+    raise FileNotFoundError(
+        "Unable to locate a local COMSOL installation. Set COMSOL_MCP_COMSOL_ROOT "
+        "or COMSOL_ROOT to the COMSOL Multiphysics installation directory."
+    )
+
+
+@lru_cache(maxsize=1)
+def _comsol_paths() -> dict[str, Path]:
+    root = _resolve_comsol_root()
+    bin_dir = root / "bin" / "win64"
+    return {
+        "root": root,
+        "bin": bin_dir,
+        "comsol": bin_dir / "comsol.exe",
+        "server": bin_dir / "comsolmphserver.exe",
+        "client": bin_dir / "comsolmphclient.exe",
+        "jvm": root / "java" / "win64" / "jre" / "bin" / "server" / "jvm.dll",
+    }
 
 
 class LocalServer:
@@ -57,7 +118,8 @@ def _parse_server_port(line: str) -> int | None:
 
 
 def local_backend() -> discovery.Backend:
-    missing = [path for path in (COMSOL_ROOT, COMSOL_EXE, COMSOL_SERVER_EXE, COMSOL_JVM) if not path.exists()]
+    paths = _comsol_paths()
+    missing = [path for path in (paths["root"], paths["comsol"], paths["server"], paths["jvm"]) if not path.exists()]
     if missing:
         raise FileNotFoundError(f"Missing COMSOL components: {missing}")
     return {
@@ -66,15 +128,16 @@ def local_backend() -> discovery.Backend:
         "minor": 3,
         "patch": 1,
         "build": 0,
-        "root": COMSOL_ROOT,
-        "jvm": COMSOL_JVM,
-        "server": [COMSOL_SERVER_EXE],
+        "root": paths["root"],
+        "jvm": paths["jvm"],
+        "server": [paths["server"]],
     }
 
 
 def configure_environment() -> None:
     """Prepend COMSOL executables to PATH for this process."""
-    parts = [str(COMSOL_BIN), str(COMSOL_JVM.parent.parent)]
+    paths = _comsol_paths()
+    parts = [str(paths["bin"]), str(paths["jvm"].parent.parent)]
     current = os.environ.get("PATH", "")
     prefix = os.pathsep.join(parts)
     if prefix not in current:
@@ -139,7 +202,7 @@ def start_server(
     else:
         server_multi = multi
     command = [
-        str(COMSOL_SERVER_EXE),
+        str(_comsol_paths()["server"]),
         "-login",
         "never",
         "-autosave",
@@ -155,7 +218,7 @@ def start_server(
 
     process = subprocess.Popen(
         command,
-        cwd=str(COMSOL_BIN),
+        cwd=str(_comsol_paths()["bin"]),
         stdin=subprocess.PIPE,
         stdout=subprocess.PIPE,
         stderr=subprocess.STDOUT,
