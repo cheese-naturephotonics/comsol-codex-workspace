@@ -1,0 +1,13 @@
+{
+  "mcpServers": {
+    "comsol-local": {
+      "command": "powershell",
+      "args": [
+        "-ExecutionPolicy",
+        "Bypass",
+        "-File",
+        ".\\scripts\\run_comsol_mcp_server.ps1"
+      ]
+    }
+  }
+}

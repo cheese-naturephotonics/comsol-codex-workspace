@@ -1,0 +1,20 @@
+{
+  "name": "local-workspace",
+  "interface": {
+    "displayName": "Workspace Plugins"
+  },
+  "plugins": [
+    {
+      "name": "comsol-mcp",
+      "source": {
+        "source": "local",
+        "path": "./plugins/comsol-mcp"
+      },
+      "policy": {
+        "installation": "INSTALLED_BY_DEFAULT",
+        "authentication": "ON_INSTALL"
+      },
+      "category": "Engineering"
+    }
+  ]
+}

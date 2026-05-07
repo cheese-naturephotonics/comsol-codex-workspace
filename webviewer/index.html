@@ -1,0 +1,136 @@
+<!doctype html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>COMSOL Workspace</title>
+    <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='7' fill='%230f766e'/%3E%3Cpath d='M8 16h16M16 8v16' stroke='white' stroke-width='2.6' stroke-linecap='round'/%3E%3C/svg%3E">
+    <link rel="stylesheet" href="./styles.css">
+  </head>
+  <body>
+    <div class="app-shell">
+      <header class="topbar">
+        <div class="title-block">
+          <div class="eyebrow">COMSOL Workspace</div>
+          <h1 id="model-name">COMSOL Desktop Bridge</h1>
+        </div>
+        <div class="toolbar">
+          <button id="refresh-button" class="command-button secondary">Refresh</button>
+          <button id="solve-button" class="command-button primary">Run Study</button>
+        </div>
+      </header>
+
+      <div class="workspace">
+        <aside class="sidebar">
+          <section class="panel">
+            <h2>Session</h2>
+            <div class="session-meta">
+              <div class="session-row">
+                <span class="metric-label">Server</span>
+                <strong id="server-target">-</strong>
+              </div>
+              <div class="session-row">
+                <span class="metric-label">Desktop</span>
+                <strong id="desktop-running">-</strong>
+              </div>
+            </div>
+            <div class="open-model-stack">
+              <label class="selector-label" for="model-path-input">Open .mph</label>
+              <input id="model-path-input" class="text-input" placeholder="D:\path\to\model.mph">
+              <button id="open-model-button" class="command-button secondary full-width">Open Model</button>
+            </div>
+          </section>
+
+          <section class="panel">
+            <h2>Loaded Models</h2>
+            <div id="loaded-models" class="model-list"></div>
+          </section>
+
+          <section class="panel">
+            <h2>Parameters</h2>
+            <form id="parameter-form" class="parameter-grid"></form>
+          </section>
+
+          <section class="panel">
+            <h2>Preview Channels</h2>
+            <div id="plot-list" class="plot-list"></div>
+          </section>
+        </aside>
+
+        <main class="main-stage">
+          <section class="stage-toolbar">
+            <div class="selectors">
+              <div class="selector-group">
+                <span class="selector-label">View</span>
+                <div id="view-tabs" class="segmented-control"></div>
+              </div>
+              <div id="mode-group" class="selector-group">
+                <span class="selector-label">Mode</span>
+                <div id="mode-tabs" class="segmented-control"></div>
+              </div>
+              <div id="field-group" class="selector-group">
+                <span class="selector-label">Field</span>
+                <div id="field-tabs" class="segmented-control"></div>
+              </div>
+            </div>
+            <div id="status-text" class="status-text">Ready</div>
+          </section>
+
+          <section id="preview-view" class="view-panel">
+            <div id="preview-empty" class="empty-state hidden">
+              <h3>Use COMSOL Desktop For Any Model</h3>
+              <p id="preview-empty-text">Open any .mph file and switch to Desktop view for the full native COMSOL interface.</p>
+            </div>
+
+            <div id="preview-ready">
+              <section class="viewport-band">
+                <div class="viewport-wrap">
+                  <canvas id="field-canvas" width="960" height="720"></canvas>
+                  <div class="legend-column">
+                    <canvas id="legend-canvas" width="52" height="320"></canvas>
+                    <div id="legend-labels" class="legend-labels"></div>
+                  </div>
+                </div>
+              </section>
+
+              <section class="metrics-band">
+                <div class="metric">
+                  <span class="metric-label">Mode value</span>
+                  <strong id="mode-value">-</strong>
+                </div>
+                <div class="metric">
+                  <span class="metric-label">Field min</span>
+                  <strong id="field-min">-</strong>
+                </div>
+                <div class="metric">
+                  <span class="metric-label">Field max</span>
+                  <strong id="field-max">-</strong>
+                </div>
+                <div class="metric">
+                  <span class="metric-label">Points</span>
+                  <strong id="point-count">-</strong>
+                </div>
+              </section>
+            </div>
+          </section>
+
+          <section id="desktop-view" class="view-panel desktop-view hidden">
+            <div class="desktop-toolbar">
+              <div>
+                <div class="selector-label">COMSOL Desktop</div>
+                <div id="desktop-status" class="status-text">Waiting for COMSOL Desktop...</div>
+              </div>
+              <button id="desktop-refresh-button" class="command-button secondary">Refresh Desktop</button>
+            </div>
+            <div class="desktop-frame">
+              <img id="desktop-image" alt="COMSOL Desktop mirror">
+            </div>
+            <div id="desktop-caption" class="desktop-caption">-</div>
+          </section>
+        </main>
+      </div>
+    </div>
+
+    <script src="./app.js"></script>
+  </body>
+  </html>

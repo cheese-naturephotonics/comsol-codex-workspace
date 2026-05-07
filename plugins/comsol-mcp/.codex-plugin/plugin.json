@@ -1,0 +1,39 @@
+{
+  "name": "comsol-mcp",
+  "version": "0.1.0",
+  "description": "Repo-local Codex plugin for driving a local COMSOL session.",
+  "author": {
+    "name": "Codex COMSOL Workspace"
+  },
+  "homepage": "https://www.comsol.com/",
+  "license": "MIT",
+  "keywords": [
+    "comsol",
+    "mcp",
+    "simulation",
+    "optics"
+  ],
+  "mcpServers": "./.mcp.json",
+  "interface": {
+    "displayName": "COMSOL MCP",
+    "shortDescription": "Control a local COMSOL session from Codex",
+    "longDescription": "Starts a local COMSOL server, opens models, edits parameters, runs studies, exports plots, launches a visible COMSOL Desktop client, and mirrors the native GUI into a browser workspace.",
+    "developerName": "Codex COMSOL Workspace",
+    "category": "Engineering",
+    "capabilities": [
+      "Interactive",
+      "Read",
+      "Write"
+    ],
+    "websiteURL": "https://www.comsol.com/",
+    "privacyPolicyURL": "https://www.comsol.com/privacy",
+    "termsOfServiceURL": "https://www.comsol.com/terms-of-use",
+    "defaultPrompt": [
+      "Open my COMSOL model and run a study.",
+      "Set a COMSOL parameter and export a result plot.",
+      "Start a visible COMSOL Desktop client for this session."
+    ],
+    "brandColor": "#0F4C81",
+    "screenshots": []
+  }
+}
