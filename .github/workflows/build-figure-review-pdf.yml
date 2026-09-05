@@ -22,7 +22,11 @@ jobs:
       - name: Install system fonts
         run: |
           sudo apt-get update
-          sudo apt-get install -y fonts-noto-cjk poppler-utils
+          sudo apt-get install -y fonts-noto-cjk fonts-wqy-zenhei poppler-utils
+          # ReportLab does not support the CFF outlines in NotoSansCJK TTC.
+          # Hide those files so the generator selects the TrueType WQY TTC fallback.
+          sudo find /usr/share/fonts/opentype/noto -maxdepth 1 -name 'NotoSansCJK*.ttc' -delete || true
+          fc-cache -f
 
       - name: Set up Python
         uses: actions/setup-python@v5
