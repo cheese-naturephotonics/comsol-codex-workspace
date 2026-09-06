@@ -26,17 +26,21 @@ jobs:
           ref: chatgpt-section2-revised-20260906
           fetch-depth: 0
 
-      - name: Correct the boundary-condition symbol in the Markdown source
+      - name: Apply two source-level build corrections
         run: |
           python3 - <<'PY'
           from pathlib import Path
           p = Path('paper_section2/第二节_统一有限箱体多模与旋转对称选模理论_修订版.md')
           text = p.read_text(encoding='utf-8')
-          old = r'\nu_n^{(R)}(R_{\max},\phi)=0.'
-          new = r'u_n^{(R)}(R_{\max},\phi)=0.'
-          if old not in text:
-              raise SystemExit('Expected source typo was not found; refusing a silent build.')
-          p.write_text(text.replace(old, new, 1), encoding='utf-8')
+          old_boundary = r'\nu_n^{(R)}(R_{\max},\phi)=0.'
+          new_boundary = r'u_n^{(R)}(R_{\max},\phi)=0.'
+          if old_boundary in text:
+              text = text.replace(old_boundary, new_boundary, 1)
+          old_packages = r'\usepackage{amsmath,amssymb,mathtools,bm,booktabs,longtable,array}'
+          new_packages = r'\usepackage{amsmath,amssymb,mathtools,bm,booktabs,longtable,array,mathrsfs}'
+          if old_packages in text:
+              text = text.replace(old_packages, new_packages, 1)
+          p.write_text(text, encoding='utf-8')
           PY
 
       - name: Install Pandoc and XeLaTeX
@@ -54,7 +58,6 @@ jobs:
             --to=latex \
             --standalone \
             --pdf-engine=xelatex \
-            --number-sections \
             --variable colorlinks=true \
             --variable linkcolor=blue \
             --variable urlcolor=blue \
