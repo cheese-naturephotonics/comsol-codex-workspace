@@ -1,0 +1,91 @@
+name: Build revised Section 2
+
+on:
+  push:
+    branches:
+      - chatgpt-section2-revised-20260906
+    paths:
+      - 'paper_section2/第二节_统一有限箱体多模与旋转对称选模理论_修订版.md'
+      - '.github/workflows/build-section2-revised.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+env:
+  LANG: C.UTF-8
+  LC_ALL: C.UTF-8
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out branch
+        uses: actions/checkout@v4
+        with:
+          ref: chatgpt-section2-revised-20260906
+          fetch-depth: 0
+
+      - name: Install Pandoc and XeLaTeX
+        run: |
+          sudo apt-get update
+          sudo DEBIAN_FRONTEND=noninteractive apt-get install -y \
+            pandoc texlive-xetex texlive-lang-chinese texlive-latex-extra \
+            texlive-fonts-recommended fonts-noto-cjk poppler-utils
+
+      - name: Convert Markdown to standalone LaTeX
+        run: |
+          cd paper_section2
+          pandoc '第二节_统一有限箱体多模与旋转对称选模理论_修订版.md' \
+            --from=markdown+tex_math_dollars+raw_tex \
+            --to=latex \
+            --standalone \
+            --pdf-engine=xelatex \
+            --number-sections \
+            --variable colorlinks=true \
+            --variable linkcolor=blue \
+            --variable urlcolor=blue \
+            --metadata title='' \
+            --output='第二节_统一有限箱体多模与旋转对称选模理论_修订版.tex'
+
+      - name: Compile PDF
+        run: |
+          cd paper_section2
+          xelatex -interaction=nonstopmode -halt-on-error \
+            '第二节_统一有限箱体多模与旋转对称选模理论_修订版.tex'
+          xelatex -interaction=nonstopmode -halt-on-error \
+            '第二节_统一有限箱体多模与旋转对称选模理论_修订版.tex'
+
+      - name: Basic PDF validation
+        run: |
+          cd paper_section2
+          test -s '第二节_统一有限箱体多模与旋转对称选模理论_修订版.pdf'
+          pdfinfo '第二节_统一有限箱体多模与旋转对称选模理论_修订版.pdf'
+          pdftotext '第二节_统一有限箱体多模与旋转对称选模理论_修订版.pdf' extracted.txt
+          grep -q '统一有限箱体多模' extracted.txt
+          grep -q '精确有限箱体共旋转多模' extracted.txt
+          rm -f extracted.txt
+
+      - name: Commit generated TeX and PDF
+        run: |
+          git config user.name 'ChatGPT Artifact Builder'
+          git config user.email 'actions@users.noreply.github.com'
+          git add \
+            'paper_section2/第二节_统一有限箱体多模与旋转对称选模理论_修订版.tex' \
+            'paper_section2/第二节_统一有限箱体多模与旋转对称选模理论_修订版.pdf'
+          if git diff --cached --quiet; then
+            echo 'No generated-file changes to commit.'
+          else
+            git commit -m 'Build revised Section 2 TeX and PDF'
+            git push origin HEAD:chatgpt-section2-revised-20260906
+          fi
+
+      - name: Upload files
+        uses: actions/upload-artifact@v4
+        with:
+          name: revised-section2-md-tex-pdf
+          path: |
+            paper_section2/第二节_统一有限箱体多模与旋转对称选模理论_修订版.md
+            paper_section2/第二节_统一有限箱体多模与旋转对称选模理论_修订版.tex
+            paper_section2/第二节_统一有限箱体多模与旋转对称选模理论_修订版.pdf
+          if-no-files-found: error
