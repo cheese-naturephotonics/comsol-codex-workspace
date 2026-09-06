@@ -1,0 +1,781 @@
+% Options for packages loaded elsewhere
+\PassOptionsToPackage{unicode}{hyperref}
+\PassOptionsToPackage{hyphens}{url}
+\PassOptionsToPackage{dvipsnames,svgnames,x11names}{xcolor}
+%
+\documentclass[
+  UTF8,
+  zihao=-4,
+  fontset=fandol]{ctexart}
+\usepackage{amsmath,amssymb}
+\usepackage{iftex}
+\ifPDFTeX
+  \usepackage[T1]{fontenc}
+  \usepackage[utf8]{inputenc}
+  \usepackage{textcomp} % provide euro and other symbols
+\else % if luatex or xetex
+  \usepackage{unicode-math} % this also loads fontspec
+  \defaultfontfeatures{Scale=MatchLowercase}
+  \defaultfontfeatures[\rmfamily]{Ligatures=TeX,Scale=1}
+\fi
+\usepackage{lmodern}
+\ifPDFTeX\else
+  % xetex/luatex font selection
+\fi
+% Use upquote if available, for straight quotes in verbatim environments
+\IfFileExists{upquote.sty}{\usepackage{upquote}}{}
+\IfFileExists{microtype.sty}{% use microtype if available
+  \usepackage[]{microtype}
+  \UseMicrotypeSet[protrusion]{basicmath} % disable protrusion for tt fonts
+}{}
+\makeatletter
+\@ifundefined{KOMAClassName}{% if non-KOMA class
+  \IfFileExists{parskip.sty}{%
+    \usepackage{parskip}
+  }{% else
+    \setlength{\parindent}{0pt}
+    \setlength{\parskip}{6pt plus 2pt minus 1pt}}
+}{% if KOMA class
+  \KOMAoptions{parskip=half}}
+\makeatother
+\usepackage{xcolor}
+\usepackage[top=2.3cm,bottom=2.3cm,left=2.4cm,right=2.4cm]{geometry}
+\usepackage{longtable,booktabs,array}
+\usepackage{calc} % for calculating minipage widths
+% Correct order of tables after \paragraph or \subparagraph
+\usepackage{etoolbox}
+\makeatletter
+\patchcmd\longtable{\par}{\if@noskipsec\mbox{}\fi\par}{}{}
+\makeatother
+% Allow footnotes in longtable head/foot
+\IfFileExists{footnotehyper.sty}{\usepackage{footnotehyper}}{\usepackage{footnote}}
+\makesavenoteenv{longtable}
+\setlength{\emergencystretch}{3em} % prevent overfull lines
+\providecommand{\tightlist}{%
+  \setlength{\itemsep}{0pt}\setlength{\parskip}{0pt}}
+\setcounter{secnumdepth}{-\maxdimen} % remove section numbering
+\usepackage{amsmath,amssymb,mathtools,booktabs,longtable,array,mathrsfs}
+\usepackage{setspace}
+\setstretch{1.15}
+\setlength{\parindent}{2em}
+\setlength{\parskip}{0.18em}
+\ifLuaTeX
+  \usepackage{selnolig}  % disable illegal ligatures
+\fi
+\IfFileExists{bookmark.sty}{\usepackage{bookmark}}{\usepackage{hyperref}}
+\IfFileExists{xurl.sty}{\usepackage{xurl}}{} % add URL line breaks if available
+\urlstyle{same}
+\hypersetup{
+  colorlinks=true,
+  linkcolor={blue},
+  filecolor={Maroon},
+  citecolor={Blue},
+  urlcolor={blue},
+  pdfcreator={LaTeX via pandoc}}
+
+\author{}
+\date{}
+
+\begin{document}
+
+\hypertarget{ux7edfux4e00ux6709ux9650ux7bb1ux4f53ux591aux6a21ux4e0eux65cbux8f6cux5bf9ux79f0ux9009ux6a21ux7406ux8bba}{%
+\section{2.
+统一有限箱体多模与旋转对称选模理论}\label{ux7edfux4e00ux6709ux9650ux7bb1ux4f53ux591aux6a21ux4e0eux65cbux8f6cux5bf9ux79f0ux9009ux6a21ux7406ux8bba}}
+
+本节建立全文共同使用的理论基础。首先，在有限横向计算区域内构造同时包含目标模式双重态、其他稳定导模以及离散化包层/辐射态的共旋转多模
+Hamiltonian；随后，通过投影消元得到目标双重态中的精确能量依赖动力学及其远失谐近似，并建立后续数值比较采用的三个统一模式空间层级；最后，利用横截面的离散旋转对称性建立模式选择定理，并进一步给出针对不同方位阶数模式的固定级联、递归补偿、加权
+zeta 响应和理想同角模型。
+
+\hypertarget{ux5668ux4ef6ux51e0ux4f55ux6a21ux5f0fux57faux5e95ux4e0eux89c2ux6d4bux91cf}{%
+\subsection{2.1
+器件几何、模式基底与观测量}\label{ux5668ux4ef6ux51e0ux4f55ux6a21ux5f0fux57faux5e95ux4e0eux89c2ux6d4bux91cf}}
+
+\hypertarget{ux5668ux4ef6ux51e0ux4f55ux4e0eux87baux65cbux53c2ux6570}{%
+\subsubsection{2.1.1
+器件几何与螺旋参数}\label{ux5668ux4ef6ux51e0ux4f55ux4e0eux87baux65cbux53c2ux6570}}
+
+考虑一根弱导圆形阶跃折射率光纤。纤芯半径、纤芯折射率和包层折射率分别记为
+\(R_{\mathrm c}\)、\(n_{\mathrm c}\) 和
+\(n_{\mathrm{cl}}\)。采用圆柱坐标 \((r,\phi,z)\)，其中 \(r\) 和 \(\phi\)
+分别表示横截面的径向坐标和方位角，\(z\) 表示光的传播方向。真空波长记为
+\(\lambda\)，相应真空波数为 \(k_0=2\pi/\lambda\)。
+
+在纤芯中引入 \(N_s\)
+个形状、尺寸和折射率相同，并沿方位角等间隔排列的局域折射率扰动。这里，\(N_s\)
+表示横截面中的扰动数量，同时也是理想横截面的离散旋转对称阶数。后续数值结构采用圆形扰动，其半径、圆心到光纤轴的距离和折射率分别记为
+\(a_s\)、\(\rho\) 和 \(n_s\)。
+
+第 \(j\) 个扰动中心的方位、均匀螺旋的参考方位以及机械螺距定义为
+
+\[
+\phi_j(z)=\vartheta(z)+\frac{2\pi j}{N_s},\qquad
+\vartheta(z)=\vartheta_0+K_hz,\qquad
+\Lambda=\frac{2\pi}{|K_h|}.
+\tag{1}
+\]
+
+其中，\(j=0,1,\ldots,N_s-1\) 是扰动编号，\(\vartheta(z)\)
+表示一个被标记参考扰动相对于固定实验室坐标系的方位角，\(\vartheta_0=\vartheta(0)\)
+是输入端方位，\(K_h=d\vartheta/dz\) 是带符号的螺旋角速度，\(\Lambda\)
+是该参考扰动完成一次 \(2\pi\)
+机械旋转所需的纵向长度。本文规定，从输入端沿 \(+z\)
+传播方向观察时，\(K_h>0\) 对应逆时针旋转。器件总长度记为
+\(L\)；若器件包含 \(N_h\) 个完整机械圈，则 \(L=N_h\Lambda\)。本文始终用
+\(N_s\) 表示横截面对称阶数，用 \(N_h\) 表示纵向完整机械圈数，并用后文的
+\(M\) 表示中螺旋循环返回阶数。
+
+由于 \(C_{N_s}\)
+横截面中的各扰动物理上完全相同，无标记的折射率图案在机械旋转
+\(2\pi/N_s\) 后已经重复。因此，\(\vartheta\) 与 \(\vartheta+2\pi/N_s\)
+描述同一个无标记横截面，折射率图案的最短纵向重复周期为
+
+\[
+\Lambda_{\mathrm{pat}}=\frac{\Lambda}{N_s}=\frac{2\pi}{N_s|K_h|}.
+\]
+
+机械螺距 \(\Lambda\) 与图案周期 \(\Lambda_{\mathrm{pat}}\)
+描述不同对象；后文涉及整数周期或端点返回条件时，将明确所采用的周期定义。当
+\(K_h=0\) 时，结构退化为固定方位的直折射率调制段。
+
+令 \(n_0(r,\phi)\) 表示横截面冻结在参考方位 \(\vartheta=0\)
+时的折射率分布，则旋转结构的折射率分布可写为
+\(n(r,\phi,z)=n_0[r,\phi-\vartheta(z)]\)。以下理论只要求横截面作刚性旋转，并不依赖局域扰动的具体形状。
+
+\hypertarget{lpoam-ux6a21ux5f0fux57faux5e95ux4e0e-bloch-ux7403ux8868ux793a}{%
+\subsubsection{2.1.2 LP/OAM 模式基底与 Bloch
+球表示}\label{lpoam-ux6a21ux5f0fux57faux5e95ux4e0e-bloch-ux7403ux8868ux793a}}
+
+在无局域扰动的圆形弱导光纤中，方位阶数为 \(\ell\)、径向阶数为 \(p\)
+的两个正交实 LP 参考模式分别定义为
+\(|f_{\ell p,a}\rangle=F_{\ell p}(r)\cos(\ell\phi)\) 和
+\(|f_{\ell p,b}\rangle=F_{\ell p}(r)\sin(\ell\phi)\)。其中，\(F_{\ell p}(r)\)
+是归一化径向场包络，\(\ell\geq1\) 是方位阶数，\(p\) 是径向阶数，下标
+\(a\) 和 \(b\)
+分别表示余弦型和正弦型实模式。二者张成无扰动参考双重态空间
+\(\mathcal H_{\ell p}^{(0)}=\operatorname{span}\{|f_{\ell p,a}\rangle,|f_{\ell p,b}\rangle\}\)。
+
+对应的两个有符号 OAM 参考模式定义为
+\(|f_{+\ell,p}\rangle=(|f_{\ell p,a}\rangle+i|f_{\ell p,b}\rangle)/\sqrt2\)
+和
+\(|f_{-\ell,p}\rangle=(|f_{\ell p,a}\rangle-i|f_{\ell p,b}\rangle)/\sqrt2\)。OAM
+模式由两个近简并构成本征模式共同形成，因此保持目标 OAM
+状态要求两个构成模式具有协调的传播和耦合动力学；若二者的响应不匹配，OAM
+模式纯度会下降。
+
+物理方位为 \(\alpha\) 的实 LP 模式可写为
+\(|\mathrm{LP}_{\ell p}(\alpha)\rangle=\cos(\ell\alpha)|f_{\ell p,a}\rangle+\sin(\ell\alpha)|f_{\ell p,b}\rangle\)。因此，实模式系数空间中的角度为
+\(\ell\alpha\)，而不是物理图样方位 \(\alpha\) 本身；相应 Bloch
+球大圆上的旋转角为 \(2\ell\alpha\)。全文由此严格区分物理图样角
+\(\alpha\)、实系数空间角 \(\ell\alpha\) 和 Bloch 球旋转角
+\(2\ell\alpha\)。
+
+设实验室坐标中的完整光场为
+\(|\Psi_{\mathrm{lab}}(z)\rangle\)。其在两个固定参考模式上的复振幅分别定义为
+\(A_{\ell p}(z)=\langle f_{\ell p,a}|\Psi_{\mathrm{lab}}(z)\rangle\) 和
+\(B_{\ell p}(z)=\langle f_{\ell p,b}|\Psi_{\mathrm{lab}}(z)\rangle\)。相应功率为
+\(P_{\ell p,a}=|A_{\ell p}|^2\) 和
+\(P_{\ell p,b}=|B_{\ell p}|^2\)，目标参考双重态内的总功率为
+\(S_0=|A_{\ell p}|^2+|B_{\ell p}|^2\)。
+
+当 \(S_0\neq0\) 时，定义归一化 Bloch/Stokes 坐标
+\(S_x=2\operatorname{Re}(A_{\ell p}^{*}B_{\ell p})/S_0\)、\(S_y=2\operatorname{Im}(A_{\ell p}^{*}B_{\ell p})/S_0\)
+和
+\(S_z=(|A_{\ell p}|^2-|B_{\ell p}|^2)/S_0\)。其中，\(\operatorname{Re}\)
+和 \(\operatorname{Im}\)
+分别表示复数的实部和虚部。在这一约定下，\(|f_{\ell p,a}\rangle\) 和
+\(|f_{\ell p,b}\rangle\) 分别对应 Bloch 球的 \(+z\) 和 \(-z\)
+方向，\(|f_{+\ell,p}\rangle\) 和 \(|f_{-\ell,p}\rangle\) 分别对应 \(+y\)
+和 \(-y\) 方向，而所有实系数 LP 模式均位于 \(x\)-\(z\) 大圆上并满足
+\(S_y=0\)。
+
+实 LP 模式的连续物理主轴方位由
+\(\alpha_{\ell p}(z)=[2\ell]^{-1}\operatorname{unwrap}\arg[S_z(z)+iS_x(z)]\)
+提取，其中 \(\arg\) 表示复数相位，\(\operatorname{unwrap}\)
+表示沿传播方向消除相位分支跳变后的连续展开。相对于输入端的累计物理旋转角定义为
+\(\delta_{\ell p}(z)=\alpha_{\ell p}(z)-\alpha_{\ell p}(0)\)。
+
+当 \(S_y=0\) 时，输出为实系数 LP 模式，\(\alpha_{\ell p}\)
+给出其刚性主轴方位；当 \(S_y\neq0\) 时，输出为复 LP/OAM 叠加态，此时
+\(\alpha_{\ell p}\) 只表示强度主轴方向，完整状态还必须结合
+\(S_y\)、目标双重态总功率和外部模式功率共同描述。相反 OAM
+分量的相对相位能够转化为花瓣图样的方位变化，并且相同相位差对应的物理旋转角与
+\(|\ell|\) 成反比。OAM
+叠加态也不能只由单一相位或单一旋转角描述，其构成分量的相对权重同样属于完整状态。
+
+Bloch
+球在本文中只用于表示目标双重态内部的归一化状态，并不预先假设所有器件作用均为无损、输入无关的
+\(SU(2)\) 操作。后续快螺旋和直段结构可分别与 \(y\) 轴和 \(z\)
+轴旋转联系起来，而慢螺旋主要描述特定局部本征分支的绝热跟随。Pauli 矩阵和
+\(SU(2)\) 表示为后续整个双重态上的两模传输提供统一的状态空间语言。
+
+\begin{quote}
+\textbf{{[}图 1 预留位置：目标 LP/OAM 双重态的 Bloch 球表示{]}}
+
+\textbf{图 1.} 方位阶数为 \(\ell\) 的 LP/OAM 双重态在 Bloch
+球上的表示。两个实参考模式位于 \(\pm z\) 方向，两个 OAM 模式位于
+\(\pm y\) 方向，所有实 LP 模式位于 \(x\)-\(z\) 大圆上。物理图样方位
+\(\alpha\) 对应 Bloch 球大圆上的角度
+\(2\ell\alpha\)。图中可进一步标出后续直段 \(R_z\)、快螺旋 \(R_y\)
+以及慢螺旋局部本征分支拖拽的示意路径。
+\end{quote}
+
+为与实验和 BPM
+仿真中的固定模式监测保持一致，本文始终使用无局域扰动圆芯中的参考模式作为投影基底，而不直接将某个扰动横截面冻结本征模的展开系数解释为标准
+LP 模式功率。
+
+\hypertarget{ux7cbeux786eux6709ux9650ux7bb1ux4f53ux5171ux65cbux8f6cux591aux6a21-hamiltonian}{%
+\subsection{2.2 精确有限箱体共旋转多模
+Hamiltonian}\label{ux7cbeux786eux6709ux9650ux7bb1ux4f53ux5171ux65cbux8f6cux591aux6a21-hamiltonian}}
+
+\hypertarget{ux51bbux7ed3ux6a2aux622aux9762ux7684ux6709ux9650ux7bb1ux4f53ux672cux5f81ux95eeux9898}{%
+\subsubsection{2.2.1
+冻结横截面的有限箱体本征问题}\label{ux51bbux7ed3ux6a2aux622aux9762ux7684ux6709ux9650ux7bb1ux4f53ux672cux5f81ux95eeux9898}}
+
+无限包层中的包层模和辐射模形成连续谱。为在同一个离散模式框架中统一处理稳定导模和辐射连续谱，本文将横向区域截断为半径
+\(R_{\max}\) 的圆形有限区域，并在外边界施加硬壁 Dirichlet
+条件。冻结参考横截面的弱导标量本征问题为
+
+\[
+\left[\nabla_\perp^2+k_0^2n_0^2(r,\phi)\right]u_n^{(R)}(r,\phi)
+=\left(\beta_n^{(R)}\right)^2u_n^{(R)}(r,\phi),\qquad
+u_n^{(R)}(R_{\max},\phi)=0.
+\tag{2}
+\]
+
+其中，\(\nabla_\perp^2\) 是横向拉普拉斯算符，\(u_n^{(R)}\) 是第 \(n\)
+个有限箱体本征模，\(\beta_n^{(R)}\) 是其传播常数，上标 \(R\)
+表示结果依赖有限箱体半径 \(R_{\max}\)。横向内积定义为
+\(\langle f|g\rangle=\int_0^{R_{\max}}\int_0^{2\pi}f^*(r,\phi)g(r,\phi)\,r\,d\phi\,dr\)，并采用正交归一化
+\(\langle u_m^{(R)}|u_n^{(R)}\rangle=\delta_{mn}\)，其中 \(\delta_{mn}\)
+是 Kronecker 符号。
+
+从全部箱体本征模中，选取与无扰动参考双重态 \(\mathcal H_{\ell p}^{(0)}\)
+具有最大子空间重叠，并在扰动连续减小时还原为该参考双重态的两个冻结本征模。它们张成目标冻结双重态，其正交投影算符记为
+\(P\)。目标双重态之外的其他稳定导模构成子空间
+\(D\)，由有限边界离散出的包层和辐射态构成子空间
+\(C_R\)，因此完整保留模式空间为
+\(\mathcal H_R=\operatorname{Ran}(P)\oplus D\oplus C_R\)，其中
+\(\operatorname{Ran}(P)\) 表示投影算符 \(P\)
+的像空间。目标双重态应通过子空间重叠、反射或旋转对称性以及参数连续性共同追踪，不能仅按本征值序号识别。
+
+随着 \(R_{\max}\) 增大，\(C_R\)
+中的离散本征值逐渐变密。单个箱体态通常不具有独立物理意义；只有在箱体半径和谱截断同时收敛后，箱体态的整体贡献才可以解释为无限包层连续谱的数值近似。
+
+\hypertarget{ux5171ux65cbux8f6cux53d8ux6362ux4e0eux7cbeux786eux4f20ux64ad}{%
+\subsubsection{2.2.2
+共旋转变换与精确传播}\label{ux5171ux65cbux8f6cux53d8ux6362ux4e0eux7cbeux786eux4f20ux64ad}}
+
+角向旋转生成元定义为 \(L_z=-i\,\partial/\partial\phi\)，相应旋转算符为
+\(R(\vartheta)=\exp(-i\vartheta L_z)\)。旋转生成元在有限箱体本征模基底中的矩阵元记为
+\(J_{mn}^{(R)}=\langle u_m^{(R)}|L_z|u_n^{(R)}\rangle\)。
+
+令 \(\beta_{\mathrm{ref}}\)
+为任意公共参考传播常数，并将所有冻结模式的共旋转复振幅组成列向量
+\(\mathbf c_R(z)\)。对于均匀螺旋，精确有限箱体多模 Hamiltonian
+及其传播解为
+
+\[
+H_R=\operatorname{diag}\!\left(\beta_n^{(R)}-\beta_{\mathrm{ref}}\right)-K_hJ^{(R)},\qquad
+\mathbf c_R(z)=e^{-iH_Rz}\mathbf c_R(0).
+\tag{3}
+\]
+
+其中，\(\operatorname{diag}(\beta_n^{(R)}-\beta_{\mathrm{ref}})\)
+表示以各模式相对传播常数为对角元的对角矩阵。忽略公共参考传播相位时，实验室坐标中的完整场由共旋转系数和冻结本征模先重构，再施加完整横截面旋转：
+
+\[
+|\Psi_{\mathrm{lab}}(z)\rangle
+=R[\vartheta(z)]
+\sum_n c_n(z)|u_n^{(R)}\rangle .
+\]
+
+忽略公共参考相位时，从输入端到输出端的实验室坐标传输为
+\(U_{\mathrm{lab}}(L,0)=R[\vartheta(L)]e^{-iH_RL}R^\dagger[\vartheta(0)]\)。所有固定标准端口振幅均由上述完整实验室场重构后再投影得到。
+
+这里需要区分``在完整场上旋转后再投影''与``先截断旋转生成元再取指数''。若某一截断模型的投影算符记为
+\(\Pi_X\)，一般有
+
+\[
+\Pi_XR(\vartheta)\Pi_X
+\neq
+\exp[-i\vartheta(\Pi_XL_z\Pi_X)]
+\quad\text{在 }\operatorname{Ran}(\Pi_X)\text{ 上},
+\]
+
+除非所选子空间在完整旋转作用下保持不变。因此，本文采用完整角谐波场的实验室坐标重构，不以截断
+\(J\) 矩阵的指数替代固定端口映射。
+
+式（3）是全文唯一的多模母方程。它在同一动力学框架中包含目标冻结双重态、其他稳定导模以及有限箱体包层/辐射态。本文所称``精确有限箱体多模理论''，是指在弱导标量近似、单向传播近似、刚性横截面旋转、给定有限边界和给定模式截断下，对所保留模式空间进行精确矩阵指数传播；它不等同于全矢量、开放边界的
+Maxwell 精确解。
+
+\hypertarget{ux7cbeux786eux6295ux5f71ux52a8ux529bux5b66ux4e0eux8fdcux5931ux8c10ux6709ux6548ux7406ux8bba}{%
+\subsection{2.3
+精确投影动力学与远失谐有效理论}\label{ux7cbeux786eux6295ux5f71ux52a8ux529bux5b66ux4e0eux8fdcux5931ux8c10ux6709ux6548ux7406ux8bba}}
+
+\hypertarget{ux80fdux91cfux4f9dux8d56ux7684ux7cbeux786eux76eeux6807ux7a7aux95f4-hamiltonian}{%
+\subsubsection{2.3.1 能量依赖的精确目标空间
+Hamiltonian}\label{ux80fdux91cfux4f9dux8d56ux7684ux7cbeux786eux76eeux6807ux7a7aux95f4-hamiltonian}}
+
+定义外部模式投影算符 \(Q=I_R-P\)，其中 \(I_R\)
+是完整保留空间中的恒等算符，因此
+\(\operatorname{Ran}(Q)=D\oplus C_R\)。按照目标空间 \(P\) 和外部空间
+\(Q\) 对母 Hamiltonian 分块，并引入相对于 \(\beta_{\mathrm{ref}}\)
+测量的准传播常数变量
+\(\mu\)。严格消去外部空间后，目标双重态中的能量依赖有效 Hamiltonian 为
+
+\[
+H_{\mathrm{eff}}^{(R)}(\mu)
+=H_{PP}+H_{PQ}\left(\mu I_Q-H_{QQ}\right)^{-1}H_{QP}
+\equiv H_{PP}+\Sigma_R(\mu).
+\tag{4}
+\]
+
+这里，\(H_{PP}=PH_RP\)、\(H_{PQ}=PH_RQ\)、\(H_{QP}=QH_RP\)、\(H_{QQ}=QH_RQ\)，\(I_Q\)
+是外部空间中的恒等算符，\(\Sigma_R(\mu)\)
+是有限箱体自能矩阵。目标准传播常数由
+\(\det[\mu I_P-H_{\mathrm{eff}}^{(R)}(\mu)]=0\) 自洽确定，其中 \(I_P\)
+是目标双重态中的二维恒等算符。
+
+式（4）在谱意义上与完整有限箱体多模问题等价，但由于自能依赖
+\(\mu\)，它一般不是普通的常系数两模 Hamiltonian。
+
+\hypertarget{ux8fdcux5931ux8c10ux5224ux636e}{%
+\subsubsection{2.3.2 远失谐判据}\label{ux8fdcux5931ux8c10ux5224ux636e}}
+
+设外部块的本征方程为
+\(H_{QQ}|\nu\rangle=\varepsilon_\nu|\nu\rangle\)，其中 \(|\nu\rangle\)
+是第 \(\nu\) 个共旋转外部通道，\(\varepsilon_\nu\)
+是其准传播常数，目标空间到该通道的耦合向量定义为
+\(\mathbf v_\nu=H_{PQ}|\nu\rangle\)。在参考准传播常数 \(\mu_0\)
+附近，定义外部通道的实际占据参数和累计虚相位参数为
+
+\[
+\eta_\nu=\frac{\|\mathbf v_\nu\|}{|\mu_0-\varepsilon_\nu|},\qquad
+\chi_\nu=L\frac{\|\mathbf v_\nu\|^2}{|\mu_0-\varepsilon_\nu|}.
+\tag{5}
+\]
+
+其中，\(\|\cdot\|\) 表示向量范数。若
+\(\eta_\nu\ll1\)，该通道的实际占据为
+\(\mathcal O(\eta_\nu^2)\)，可视为远失谐虚跃迁通道；但即使
+\(\eta_\nu\ll1\)，仍可能出现
+\(\chi_\nu=\mathcal O(1)\)，即外部模式功率始终很低，却经过长距离积累出显著相位修正。因此，外部模式占据很低并不等价于封闭目标双重态近似成立。
+
+\hypertarget{ux9759ux6001ux8fdcux5931ux8c10ux7ea6ux5316ux4e0e-dressed-ux53c2ux6570}{%
+\subsubsection{2.3.3 静态远失谐约化与 dressed
+参数}\label{ux9759ux6001ux8fdcux5931ux8c10ux7ea6ux5316ux4e0e-dressed-ux53c2ux6570}}
+
+若自能 \(\Sigma_R(\mu)\) 在目标谱区内随 \(\mu\) 变化缓慢，可在参考点
+\(\mu_0\) 取静态近似。所得目标双重态 Hamiltonian 的 Hermitian 部分写为
+
+\[
+H_{\mathrm{eff,c}}=\bar\beta_{\mathrm d}I_P+\frac12\mathbf B_{\mathrm d}\cdot\symbf{\sigma},\qquad
+H_{\mathrm{eff,c}}\simeq
+\bar\beta_{\mathrm d}I_P+\frac{\Delta\beta_{\mathrm d}}{2}\sigma_z-\gamma_{\mathrm d}K_h\sigma_y.
+\tag{6}
+\]
+
+其中，\(\sigma_x=\left(\begin{smallmatrix}0&1\\1&0\end{smallmatrix}\right)\)、\(\sigma_y=\left(\begin{smallmatrix}0&-i\\i&0\end{smallmatrix}\right)\)
+和
+\(\sigma_z=\left(\begin{smallmatrix}1&0\\0&-1\end{smallmatrix}\right)\)
+是 Pauli 矩阵，\(\symbf{\sigma}=(\sigma_x,\sigma_y,\sigma_z)\)。Dressed
+平均传播常数定义为
+\(\bar\beta_{\mathrm d}=\operatorname{Tr}(H_{\mathrm{eff,c}})/2\)，其中
+\(\operatorname{Tr}\) 表示矩阵迹。有效 Pauli 分量定义为
+\(B_{\mathrm d,j}=\operatorname{Tr}(\sigma_jH_{\mathrm{eff,c}})\)，其中
+\(j=x,y,z\)，因此
+\(\mathbf B_{\mathrm d}=(B_{\mathrm d,x},B_{\mathrm d,y},B_{\mathrm d,z})\)。
+
+在式（6）右侧采用的镜像对称基底中，dressed 双重态分裂定义为
+\(\Delta\beta_{\mathrm d}=B_{\mathrm d,z}\)。当 \(K_h\neq0\) 时，dressed
+旋转生成元系数定义为
+\(\gamma_{\mathrm d}=-B_{\mathrm d,y}/(2K_h)=-\operatorname{Tr}(\sigma_yH_{\mathrm{eff,c}})/(2K_h)\)；在
+\(K_h\rightarrow0\) 时，采用该表达式的连续极限。若对称性允许非零
+\(B_{\mathrm d,x}\)，则必须保留式（6）左侧的一般 Pauli 形式。
+
+为解释不同外部通道的作用，可将 dressed 分裂写成
+\(\Delta\beta_{\mathrm d}=\Delta\beta_{\mathrm{dir}}+\delta\Delta\beta_D+\delta\Delta\beta_C\)。其中，\(\Delta\beta_{\mathrm{dir}}\)
+是目标冻结双重态的直接分裂，\(\delta\Delta\beta_D\) 和
+\(\delta\Delta\beta_C\)
+分别是其他稳定导模与包层/辐射连续谱产生的虚跃迁修正。该分解主要用于物理解释；所有交叉
+dressing 和多次返回过程仍统一包含于式（4）的外部预解算符中。
+
+对于真正的无限开放包层，连续谱自能一般写为
+\(\Sigma_C^{(+)}(\mu)=\Delta_C(\mu)-i\Gamma_C(\mu)/2\)，其中
+\(\Delta_C\) 是连续谱主值积分产生的 Hermitian 重整化，\(\Gamma_C\)
+是向开放辐射通道泄漏产生的衰减矩阵。本文采用的硬边界有限箱体主要用于逼近
+\(\Delta_C\) 及其对目标模式相位的作用；严格计算 \(\Gamma_C\)
+需要完美匹配层或 outgoing Green 函数边界。
+
+\hypertarget{ux7edfux4e00ux6a21ux5f0fux7a7aux95f4ux5c42ux7ea7}{%
+\subsection{2.4
+统一模式空间层级}\label{ux7edfux4e00ux6a21ux5f0fux7a7aux95f4ux5c42ux7ea7}}
+
+为在后续不同工作区中定量区分目标双重态、其他稳定导模以及包层/辐射连续谱的作用，本文从同一次冻结横截面本征求解和同一个有限箱体母
+Hamiltonian \(H_R\) 中构造三个逐级扩大的模式空间。
+
+\begin{longtable}[]{@{}
+  >{\raggedright\arraybackslash}p{(\columnwidth - 6\tabcolsep) * \real{0.2500}}
+  >{\raggedright\arraybackslash}p{(\columnwidth - 6\tabcolsep) * \real{0.2500}}
+  >{\raggedright\arraybackslash}p{(\columnwidth - 6\tabcolsep) * \real{0.2500}}
+  >{\raggedright\arraybackslash}p{(\columnwidth - 6\tabcolsep) * \real{0.2500}}@{}}
+\toprule\noalign{}
+\begin{minipage}[b]{\linewidth}\raggedright
+模型
+\end{minipage} & \begin{minipage}[b]{\linewidth}\raggedright
+保留模式空间
+\end{minipage} & \begin{minipage}[b]{\linewidth}\raggedright
+对应 Hamiltonian
+\end{minipage} & \begin{minipage}[b]{\linewidth}\raggedright
+物理含义
+\end{minipage} \\
+\midrule\noalign{}
+\endhead
+\bottomrule\noalign{}
+\endlastfoot
+模型 I & \(\operatorname{Ran}(P)\) & \(H_{PP}\) &
+只保留目标冻结双重态，描述假设该双重态完全封闭时的传播。 \\
+模型 II & \(\operatorname{Ran}(P)\oplus D\) & \(H_R\) 在该子空间中的限制
+& 加入其他稳定导模的真实占据、虚跃迁以及稳定导模之间的多次耦合。 \\
+模型 III & \(\operatorname{Ran}(P)\oplus D\oplus C_R\) & 完整 \(H_R\) &
+进一步加入有限箱体离散出的包层/辐射态及其连续谱 dressing。 \\
+\end{longtable}
+
+模型 I 与模型 II 的差异反映其他稳定导模带来的增量作用，模型 II 与模型
+III
+的差异反映包层/辐射连续谱带来的额外增量作用。由于稳定导模和连续谱之间可以相互耦合，而且模式功率、Bloch/Stokes
+坐标和输出旋转角均为非线性观测量，这两组差异不应被解释为两个严格独立、线性可加的物理贡献。
+
+三个模型均使用相同的光纤与扰动横截面、相同的螺旋角速度或直段参数、相同的器件长度、相同的物理输入、相同的固定参考模式监测以及相同的纵向采样位置。若模型
+\(X\in\{\mathrm I,\mathrm{II},\mathrm{III}\}\) 的保留空间投影算符记为
+\(P_X\)，则物理输入 \(|\Psi_{\mathrm{in}}\rangle\)
+在该模型中的投影范数定义为
+\(\mathcal N_X=\|P_X|\Psi_{\mathrm{in}}\rangle\|^2\)。
+
+本文区分两种输入口径。absolute 口径直接使用
+\(P_X|\Psi_{\mathrm{in}}\rangle\)，从而保留有限截断空间不能完整表示物理输入时的范数缺损；conditional
+口径使用
+\(P_X|\Psi_{\mathrm{in}}\rangle/\sqrt{\mathcal N_X}\)，用于比较各保留空间内部的条件动力学。任何采用
+conditional 口径的结果均必须同时报告
+\(\mathcal N_X\)。需要强调的是，conditional
+归一化只把模型内保留场的总范数设为
+1，并不能补回被截去的空间分量，也不能保证截断后的场重新成为原始标准
+LP/OAM 输入。
+
+为检验器件在整个目标双重态上的复数操作，分别以两个固定标准模式作为输入，并在共同的传播相位参考下构造
+
+\[
+T_X(z)=
+\begin{pmatrix}
+\langle f_{\ell p,a}|\Psi^{(a)}_{\mathrm{lab},X}(z)\rangle &
+\langle f_{\ell p,a}|\Psi^{(b)}_{\mathrm{lab},X}(z)\rangle\\
+\langle f_{\ell p,b}|\Psi^{(a)}_{\mathrm{lab},X}(z)\rangle &
+\langle f_{\ell p,b}|\Psi^{(b)}_{\mathrm{lab},X}(z)\rangle
+\end{pmatrix}.
+\]
+
+这里，上标 \((a)\) 和 \((b)\)
+表示两个正交物理输入。两列不能分别去除不同的整体相位后再拼接，否则会破坏真实的相对相位和门矩阵。相应的平均目标空间保留率和最坏输入保留率定义为
+
+\[
+P_{\mathrm{avg}}=\frac12\operatorname{Tr}(T_X^\dagger T_X),\qquad
+P_{\min}=\lambda_{\min}(T_X^\dagger T_X).
+\]
+
+模型 III 的结果还必须对有限箱体半径 \(R_{\max}\)、径向离散、角向 Fourier
+截断、保留箱体态的数量以及准传播常数谱窗口进行收敛检查。所有后续数值曲线均由相应模式空间中的矩阵指数直接计算，而不是由经验拟合后的有效分裂或校正常数生成。
+
+\hypertarget{ux65cbux8f6cux5bf9ux79f0ux6027ux4e0eux591aux6a21ux5f0fux72ecux7acbux63a7ux5236ux7684ux7edfux4e00ux7406ux8bba}{%
+\subsection{2.5
+旋转对称性与多模式独立控制的统一理论}\label{ux65cbux8f6cux5bf9ux79f0ux6027ux4e0eux591aux6a21ux5f0fux72ecux7acbux63a7ux5236ux7684ux7edfux4e00ux7406ux8bba}}
+
+本节的目标不只是判断某种旋转对称结构能否作用于某个模式，而是建立一种固定的器件组合规则，使同一根多模光纤中的不同方位阶数模式能够分别获得不同的目标操作。为突出方位阶数选择，以下固定径向阶数
+\(p\)，并在不引起歧义时省略下标 \(p\)。所考虑的模式方位阶数为
+\(\ell=1,2,\ldots,\ell_{\max}\)，其中 \(\ell_{\max}\)
+是纳入独立控制的最大方位阶数，第 \(\ell\) 个目标模式双重态记为
+\(\mathcal H_\ell\)。这里的``独立控制''始终指一个预先选定的有限模式集合。
+
+\hypertarget{ux79bbux6563ux65cbux8f6cux5bf9ux79f0ux6027ux4e0eux89d2ux52a8ux91cfux9009ux62e9ux89c4ux5219}{%
+\subsubsection{2.5.1
+离散旋转对称性与角动量选择规则}\label{ux79bbux6563ux65cbux8f6cux5bf9ux79f0ux6027ux4e0eux89d2ux52a8ux91cfux9009ux62e9ux89c4ux5219}}
+
+设冻结横截面具有 \(C_{N_s}\) 离散旋转对称性，即
+\(n_0^2(r,\phi+2\pi/N_s)=n_0^2(r,\phi)\)。定义离散旋转算符
+\(\mathscr R_{N_s}=\exp[-i(2\pi/N_s)L_z]\)。由于折射率分布、圆形有限箱体边界和共旋转项均保持该对称性，完整
+Hamiltonian 和由其得到的精确有效 Hamiltonian
+都可以按照离散角动量剩余类分块。
+
+若两个模式的有符号方位阶数分别为 \(m\) 和
+\(m'\)，则统一的对称性选择规则为
+
+\[
+m'-m=sN_s,\qquad
+N_s\mid2\ell\ \text{允许目标双重态内部直接作用},\qquad
+N_s\mid\ell\ \text{允许与 }m=0\text{ 径向模式直接耦合}.
+\tag{7}
+\]
+
+其中，\(s\in\mathbb Z\) 是任意整数，符号``\(\mid\)''表示整除，\(\ell\)
+是目标 LP/OAM
+模式的方位阶数。第一项给出任意两个方位模式之间的直接耦合条件，第二项给出
+\(+\ell\) 和 \(-\ell\) 两个 OAM
+分量之间直接分裂或混合的条件，第三项给出目标模式与 \(\mathrm{LP}_{0p}\)
+径向模式之间的直接耦合条件。
+
+满足式（7）只表示相应通道在对称性上被允许，具体矩阵元仍可能由于径向场重叠或附加对称性而为零；若式（7）不满足，则对应直接矩阵元严格为零。
+
+\begin{longtable}[]{@{}
+  >{\raggedright\arraybackslash}p{(\columnwidth - 8\tabcolsep) * \real{0.1579}}
+  >{\raggedleft\arraybackslash}p{(\columnwidth - 8\tabcolsep) * \real{0.2105}}
+  >{\raggedleft\arraybackslash}p{(\columnwidth - 8\tabcolsep) * \real{0.2105}}
+  >{\raggedleft\arraybackslash}p{(\columnwidth - 8\tabcolsep) * \real{0.2105}}
+  >{\raggedleft\arraybackslash}p{(\columnwidth - 8\tabcolsep) * \real{0.2105}}@{}}
+\toprule\noalign{}
+\begin{minipage}[b]{\linewidth}\raggedright
+横截面对称性
+\end{minipage} & \begin{minipage}[b]{\linewidth}\raggedleft
+\(\mathrm{LP}_{11}\) 双重态
+\end{minipage} & \begin{minipage}[b]{\linewidth}\raggedleft
+\(\mathrm{LP}_{21}\) 双重态
+\end{minipage} & \begin{minipage}[b]{\linewidth}\raggedleft
+\(\mathrm{LP}_{11}\leftrightarrow\mathrm{LP}_{21}\)
+\end{minipage} & \begin{minipage}[b]{\linewidth}\raggedleft
+\(\mathrm{LP}_{21}\leftrightarrow\mathrm{LP}_{0p}\)
+\end{minipage} \\
+\midrule\noalign{}
+\endhead
+\bottomrule\noalign{}
+\endlastfoot
+\(C_1\) & 允许 & 允许 & 允许 & 允许 \\
+\(C_2\) & 允许 & 允许 & 禁止 & 允许 \\
+\(C_3\) & 禁止 & 禁止 & 允许 & 禁止 \\
+\(C_4\) & 禁止 & 允许 & 禁止 & 禁止 \\
+\end{longtable}
+
+例如，\(C_3\) 结构允许 \(+1\leftrightarrow-2\) 和
+\(-1\leftrightarrow+2\)，因此可以打开
+\(\mathrm{LP}_{11}\leftrightarrow\mathrm{LP}_{21}\)
+的跨模式族通道。\(C_4\) 结构允许直接作用于 \(\mathrm{LP}_{21}\)
+双重态，同时禁止其与 \(\mathrm{LP}_{0p}\) 模式之间的直接径向通道；但
+\(C_4\) 对 \(\mathrm{LP}_{11}\) 双重态的直接作用被严格禁止。
+
+当 \(N_s\nmid2\ell\) 时，目标 \(+\ell\) 和 \(-\ell\)
+分量属于不同的离散角动量剩余类。精确有效 Hamiltonian 在 OAM
+基底中因此具有对角形式
+
+\[
+H_{\mathrm{eff}}^{(R)}(\mu)
+=
+\begin{pmatrix}
+h_{+\ell}(\mu)&0\\
+0&h_{-\ell}(\mu)
+\end{pmatrix},\qquad
+N_s\nmid2\ell.
+\tag{8}
+\]
+
+其中，\(h_{+\ell}(\mu)\) 和 \(h_{-\ell}(\mu)\) 是两个 OAM
+剩余类中的有效对角项。式（8）说明，即使已经消去了其他稳定导模和箱体连续谱，不同剩余类之间的间接非对角混合仍被精确对称性禁止。但对称性并不要求
+\(h_{+\ell}=h_{-\ell}\)，所以两个 OAM
+分量仍可能积累不同的对角自能，或者分别向各自允许的外部模式发生泄漏。
+
+\hypertarget{ux72ecux7acbux63a7ux5236ux76eeux6807zeta-ux77e9ux9635ux4e0eux5e7fux4e49ux4f20ux8f93ux5757}{%
+\subsubsection{2.5.2 独立控制目标、zeta
+矩阵与广义传输块}\label{ux72ecux7acbux63a7ux5236ux76eeux6807zeta-ux77e9ux9635ux4e0eux5e7fux4e49ux4f20ux8f93ux5757}}
+
+本文希望实现的不是所有模式获得相同作用，而是为每个方位阶数模式分别指定目标传输。设第
+\(\ell\) 个模式双重态上的目标传输为
+\(A_\ell^\star\)，则整个受控模式空间上的目标传输写为
+
+\[
+\mathcal T^\star
+=
+\bigoplus_{\ell=1}^{\ell_{\max}}
+A_\ell^\star.
+\tag{9}
+\]
+
+其中，符号``\(\bigoplus\)''表示矩阵直和。\(A_\ell^\star\)
+可以是整个双重态上的可逆二维传输，也可以在特定应用中只表示一个指定输入态到指定输出态的映射。若某个模式不需要改变，则令
+\(A_\ell^\star=I_2\)，其中 \(I_2\)
+是二维恒等矩阵。式（9）即为本文所称的``对各阶模式进行独立控制''。
+
+为了构造针对第 \(d\) 阶模式的选择单元，取横截面对称阶数 \(N_s=2d\)，其中
+\(d=1,2,\ldots,\ell_{\max}\) 是控制单元的选择阶数。由式（7），该
+\(C_{2d}\) 单元允许直接作用于模式 \(\ell\) 的条件简化为 \(d\mid\ell\)。
+
+在整数集合 \(\{1,2,\ldots,\ell_{\max}\}\)
+上，以``整除''为偏序关系，定义控制取向的泽塔矩阵（zeta matrix）
+
+\[
+Z_{\ell d}
+=
+\begin{cases}
+1,&d\mid\ell,\\
+0,&d\nmid\ell.
+\end{cases}
+\tag{10}
+\]
+
+其中，行指标 \(\ell\) 表示被控制模式的方位阶数，列指标 \(d\) 表示
+\(C_{2d}\) 控制单元。\(Z_{\ell d}=1\) 表示该单元对第 \(\ell\)
+个目标双重态的直接作用在对称性上被允许，\(Z_{\ell d}=0\)
+表示目标双重态内部的直接非对角混合被禁止。
+
+对于 \(\ell=1,\ldots,6\)，相应选择关系为：\(C_2\) 作用于
+\(\ell=1,2,3,4,5,6\)；\(C_4\) 作用于 \(\ell=2,4,6\)；\(C_6\) 作用于
+\(\ell=3,6\)；\(C_8\)、\(C_{10}\) 和 \(C_{12}\) 分别作用于
+\(\ell=4\)、\(\ell=5\) 和 \(\ell=6\)。
+
+zeta
+矩阵不是光学传输矩阵，而是整个选择网络的组合数学骨架。它只规定哪些直接模式--单元响应项在对称性上可以非零，并不决定这些非零项的实际操作类型和数值大小，也不保证名义禁戒模式的完整传输块严格等于恒等矩阵。
+
+令 \(\mathcal T_d\) 表示第 \(d\) 个 \(C_{2d}\)
+单元在完整多模空间中的传输算符，\(P_\ell\) 表示投影到第 \(\ell\)
+个目标双重态的投影算符，并定义该单元在第 \(\ell\) 个双重态中的传输块为
+\(T_{\ell d}=P_\ell\mathcal T_dP_\ell\)。其一般对称性结构为：当
+\(Z_{\ell d}=1\) 时，\(T_{\ell d}=A_{\ell d}\)，其中 \(A_{\ell d}\)
+是具体器件对允许模式产生的一般二维传输；当 \(Z_{\ell d}=0\) 时，目标块在
+OAM 基底中为 \(\operatorname{diag}(t_{+\ell,d},t_{-\ell,d})\)，其中
+\(t_{+\ell,d}\) 和 \(t_{-\ell,d}\) 是两个 OAM
+剩余类的返回幅度，可以同时包含传播相位、衰减和未完全返回造成的幅度变化。
+
+\(A_{\ell d}\) 不必属于
+\(SU(2)\)：它可以表示慢螺旋的状态选择型拖拽、整个双重态上的 \(R_y\) 或
+\(R_z\) 操作、一般 \(U(2)\) 传输，或者存在损耗时的非酉传输。当
+\(Z_{\ell d}=0\) 时，只有在进一步满足
+\(t_{+\ell,d}\simeq t_{-\ell,d}\simeq e^{i\varphi_{\ell d}}\)，并且向目标双重态之外的泄漏可以忽略时，该模式才可近似视为理想旁观模式，即
+\(T_{\ell d}\simeq e^{i\varphi_{\ell d}}I_2\)，其中 \(\varphi_{\ell d}\)
+是共同传播相位。
+
+因此，必须严格区分 \(Z_{\ell d}=0\) 和
+\(T_{\ell d}\propto I_2\)：前者表示目标双重态的直接非对角混合被对称性禁止，后者才表示该模式对器件近似透明。
+
+\hypertarget{ux56faux5b9aux7ea7ux8054ux987aux5e8fux4e0eux9012ux5f52ux8865ux507f}{%
+\subsubsection{2.5.3
+固定级联顺序与递归补偿}\label{ux56faux5b9aux7ea7ux8054ux987aux5e8fux4e0eux9012ux5f52ux8865ux507f}}
+
+单个低阶选择单元通常不能只作用于一个模式。例如，\(C_2\)
+会同时作用于所有整数阶模式，而 \(C_4\)
+会同时作用于所有偶数阶模式。因此，要实现式（9）规定的独立控制，必须允许前级单元先对多个模式产生作用，再由后续更高阶的专用单元逐级补偿这些副作用。
+
+固定物理顺序取为
+\(C_2\rightarrow C_4\rightarrow C_6\rightarrow\cdots\rightarrow C_{2\ell_{\max}}\)。低阶单元位于前方，因为它可能作用于高阶模式；高阶单元位于后方，因为当
+\(d>\ell\) 时 \(d\) 不可能整除
+\(\ell\)，所以后续高阶单元不会重新引入由式（7）允许的直接目标双重态作用。该顺序因此形成一个按直接选择关系组织的下三角控制网络。
+
+当处理第 \(\ell\)
+个模式时，定义所有前级真约数单元在该模式上产生的累计操作为
+\(W_\ell=\prod_{d\mid\ell,\,d<\ell}^{\leftarrow}A_{\ell d}\)，其中左箭头表示按照实际传播顺序相乘，后经过的单元写在左侧。若目标是在整个双重态上实现可逆传输
+\(A_\ell^\star\)，则第 \(\ell\) 个专用 \(C_{2\ell}\)
+单元只需实现剩余操作
+\(A_{\ell\ell}=A_\ell^\star W_\ell^{-1}\)。完成该单元后，第 \(\ell\)
+个模式的累计传输恰好为
+\(A_\ell^\star\)，而所有后续单元都不会再产生由直接选择规则允许的目标双重态作用。
+
+若目标只是把指定输入态 \(|\psi_\ell^{\mathrm{in}}\rangle\)
+变换为指定输出态
+\(|\psi_\ell^\star\rangle\)，则无需实现整个矩阵逆，只需使
+\(A_{\ell\ell}W_\ell|\psi_\ell^{\mathrm{in}}\rangle=e^{i\varphi_\ell}|\psi_\ell^\star\rangle\)，其中
+\(\varphi_\ell\)
+是该输出态的整体相位。简单慢螺旋属于这种状态选择型补偿。
+
+因此，只要名义旁观模式的完整残余传输已可忽略或已被纳入补偿、各专用单元能够实现所需剩余操作并且相关传输可逆，固定升序级联就能够实现任意块对角目标
+\(\mathcal T^\star\)。若前级单元已经产生不可逆辐射损耗，则相应功率不能由后续被动单元恢复。
+
+\hypertarget{ux540cux8f74ux63a7ux5236ux5c42ux4e0eux52a0ux6743-zeta-ux77e9ux9635}{%
+\subsubsection{2.5.4 同轴控制层与加权 zeta
+矩阵}\label{ux540cux8f74ux63a7ux5236ux5c42ux4e0eux52a0ux6743-zeta-ux77e9ux9635}}
+
+当所有选择单元都在各自目标双重态上产生同一 Pauli
+轴方向的旋转，并且名义禁戒模式上的完整残余操作可以忽略或已被独立校准时，一般矩阵补偿可以简化为标量角度综合。设旋转轴标签为
+\(a\in\{y,z\}\)，相应 Pauli 矩阵为 \(\sigma_a\)，并定义标准轴旋转
+\(R_a(\theta)=\exp(-i\theta\sigma_a/2)\)。令 \(x_d\) 是第 \(d\)
+个单元的可调参数，\(f_{\ell d}^{(a)}(x_d)\) 是该单元对模式 \(\ell\)
+产生的直接、同轴旋转角，则第 \(\ell\)
+个模式经过整个同轴控制层后获得的总角为
+
+\[
+\Theta_\ell^{(a)}
+=
+\sum_{d=1}^{\ell_{\max}}
+Z_{\ell d}\,
+f_{\ell d}^{(a)}(x_d).
+\tag{11}
+\]
+
+其中，\(\Theta_\ell^{(a)}\) 是模式 \(\ell\) 在轴 \(a\)
+上的目标总角。式（11）也适用于非线性可调响应。按照
+\(d=1,2,\ldots,\ell_{\max}\) 的顺序求解时，第 \(d\)
+个单元只需补足此前所有真约数单元尚未实现的剩余角，即选择 \(x_d\) 使
+\(f_{dd}^{(a)}(x_d)=\Theta_d^{(a)\star}-\sum_{j\mid d,\,j<d}f_{dj}^{(a)}(x_j)\)。
+
+若直接同轴响应在所用工作区间内近似线性，可写成
+\(f_{\ell d}^{(a)}(x_d)=g_{\ell d}^{(a)}x_d\)，其中 \(g_{\ell d}^{(a)}\)
+是第 \(d\) 个单元对模式 \(\ell\) 的线性响应系数。定义加权 zeta 矩阵
+\(G_{\ell d}^{(a)}=Z_{\ell d}g_{\ell d}^{(a)}\)，则
+
+\[
+\boldsymbol{\Theta}^{(a)}
+=
+\mathbf G^{(a)}
+\mathbf x^{(a)}.
+\tag{12}
+\]
+
+这里，\(\boldsymbol{\Theta}^{(a)}=(\Theta_1^{(a)},\ldots,\Theta_{\ell_{\max}}^{(a)})^{\mathrm T}\)
+是各模式目标角组成的列向量，\(\mathbf x^{(a)}=(x_1^{(a)},\ldots,x_{\ell_{\max}}^{(a)})^{\mathrm T}\)
+是各控制参数组成的列向量。在这一直接、同轴且名义禁戒响应可忽略的模型中，\(\mathbf G^{(a)}\)
+具有与 zeta 矩阵相同的下三角零元素结构；只要所有对角自响应
+\(g_{dd}^{(a)}\neq0\)，该矩阵即可通过前代唯一求解。
+
+对于实际快螺旋或其他周期驱动单元，\(N_s\nmid2\ell\)
+只严格禁止目标双重态的直接非对角混合；不同 OAM
+剩余类仍可能通过允许的高阶 Floquet 路径或外部模式 dressing
+获得不同的对角相位，从而在 LP
+基底中产生残余旋转。因此，若这些名义禁戒响应不可忽略，必须改用由完整复传输矩阵标定的全响应函数
+\(\widetilde f_{\ell d}^{(a)}(x_d)\)：
+
+\[
+\Theta_\ell^{(a)}=\sum_{d=1}^{\ell_{\max}}\widetilde f_{\ell d}^{(a)}(x_d),
+\]
+
+并直接求解相应的非线性控制问题。在给定工作点附近，局部独立可调性的必要条件是
+Jacobian \(\partial\Theta_\ell^{(a)}/\partial x_d\)
+满秩；其条件数和可用控制范围还决定实际综合的稳定性。只有当名义禁戒项足够小或已被补偿时，全响应模型才可约化为式（11）和式（12）的加权
+zeta 形式。
+
+\hypertarget{ux7406ux60f3ux540cux89d2ux6a21ux578bux4e0e-muxf6bius-ux53cdux6f14}{%
+\subsubsection{2.5.5 理想同角模型与 Möbius
+反演}\label{ux7406ux60f3ux540cux89d2ux6a21ux578bux4e0e-muxf6bius-ux53cdux6f14}}
+
+理想同角模型是加权 zeta 理论的特殊情况。在该模型中，第 \(d\)
+个单元对所有满足 \(d\mid\ell\) 的模式产生完全相同的角
+\(x_d\)，而对所有满足 \(d\nmid\ell\) 的模式产生零完整响应。因此
+
+\[
+f_{\ell d}(x_d)=
+\begin{cases}
+x_d,&d\mid\ell,\\
+0,&d\nmid\ell,
+\end{cases}
+\qquad
+\boldsymbol{\Theta}=\mathbf Z\mathbf x,
+\qquad
+x_d=\sum_{j\mid d}\mu(d/j)\Theta_j.
+\tag{13}
+\]
+
+其中，\(\boldsymbol{\Theta}=(\Theta_1,\ldots,\Theta_{\ell_{\max}})^{\mathrm T}\)
+是各模式总角组成的列向量，\(\mathbf x=(x_1,\ldots,x_{\ell_{\max}})^{\mathrm T}\)
+是各选择单元角度组成的列向量，\(\mu(n)\) 是数论 Möbius
+函数。其定义为：\(\mu(1)=1\)；当正整数 \(n\)
+含有平方质因子时，\(\mu(n)=0\)；当 \(n\) 是 \(r\)
+个不同质数的乘积时，\(\mu(n)=(-1)^r\)。
+
+式（13）表明，zeta 矩阵描述各选择单元对其倍数模式的正向约数求和，而
+Möbius
+反演给出从目标模式角反求各选择单元参数的闭式解。简单慢螺旋在满足共同分支对齐和旁观模式透明条件时，对应物理图样角空间中的理想同角模型；快螺旋和直折射率调制结构通常对不同模式具有不同响应，因此一般对应加权
+zeta 模型，必要时还应使用上一小节定义的完整响应矩阵。
+
+\end{document}
