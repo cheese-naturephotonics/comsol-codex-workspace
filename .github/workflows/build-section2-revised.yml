@@ -39,7 +39,12 @@ jobs:
           )
           text = text.replace(
               r'\usepackage{amsmath,amssymb,mathtools,bm,booktabs,longtable,array}',
+              r'\usepackage{amsmath,amssymb,mathtools,booktabs,longtable,array,mathrsfs}',
+              1,
+          )
+          text = text.replace(
               r'\usepackage{amsmath,amssymb,mathtools,bm,booktabs,longtable,array,mathrsfs}',
+              r'\usepackage{amsmath,amssymb,mathtools,booktabs,longtable,array,mathrsfs}',
               1,
           )
           old_lab = (
@@ -60,6 +65,7 @@ jobs:
           )
           if old_lab in text:
               text = text.replace(old_lab, new_lab, 1)
+          text = text.replace(r'\boldsymbol{\sigma}', r'\symbf{\sigma}')
           p.write_text(text, encoding='utf-8')
           PY
 
