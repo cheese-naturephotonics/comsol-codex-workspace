@@ -26,20 +26,40 @@ jobs:
           ref: chatgpt-section2-revised-20260906
           fetch-depth: 0
 
-      - name: Apply two source-level build corrections
+      - name: Apply source-level build corrections
         run: |
           python3 - <<'PY'
           from pathlib import Path
           p = Path('paper_section2/第二节_统一有限箱体多模与旋转对称选模理论_修订版.md')
           text = p.read_text(encoding='utf-8')
-          old_boundary = r'\nu_n^{(R)}(R_{\max},\phi)=0.'
-          new_boundary = r'u_n^{(R)}(R_{\max},\phi)=0.'
-          if old_boundary in text:
-              text = text.replace(old_boundary, new_boundary, 1)
-          old_packages = r'\usepackage{amsmath,amssymb,mathtools,bm,booktabs,longtable,array}'
-          new_packages = r'\usepackage{amsmath,amssymb,mathtools,bm,booktabs,longtable,array,mathrsfs}'
-          if old_packages in text:
-              text = text.replace(old_packages, new_packages, 1)
+          text = text.replace(
+              r'\nu_n^{(R)}(R_{\max},\phi)=0.',
+              r'u_n^{(R)}(R_{\max},\phi)=0.',
+              1,
+          )
+          text = text.replace(
+              r'\usepackage{amsmath,amssymb,mathtools,bm,booktabs,longtable,array}',
+              r'\usepackage{amsmath,amssymb,mathtools,bm,booktabs,longtable,array,mathrsfs}',
+              1,
+          )
+          old_lab = (
+              '实验室坐标中的完整场由共旋转系数和冻结本征模先重构，再施加完整横截面旋转：\n\n'
+              '$$\n'
+              '|\\Psi_{\\mathrm{lab}}(z)\\rangle\n'
+              '=e^{i\\beta_{\\mathrm{ref}}z}R[\\vartheta(z)]\n'
+              '\\sum_n c_n(z)|u_n^{(R)}\\rangle .\n'
+              '$$'
+          )
+          new_lab = (
+              '忽略公共参考传播相位时，实验室坐标中的完整场由共旋转系数和冻结本征模先重构，再施加完整横截面旋转：\n\n'
+              '$$\n'
+              '|\\Psi_{\\mathrm{lab}}(z)\\rangle\n'
+              '=R[\\vartheta(z)]\n'
+              '\\sum_n c_n(z)|u_n^{(R)}\\rangle .\n'
+              '$$'
+          )
+          if old_lab in text:
+              text = text.replace(old_lab, new_lab, 1)
           p.write_text(text, encoding='utf-8')
           PY
 
@@ -81,6 +101,7 @@ jobs:
           grep -q '统一有限箱体多模' extracted.txt
           grep -q '精确有限箱体共旋转多模' extracted.txt
           grep -q 'u_n' '第二节_统一有限箱体多模与旋转对称选模理论_修订版.md'
+          grep -q '忽略公共参考传播相位时' '第二节_统一有限箱体多模与旋转对称选模理论_修订版.md'
           rm -f extracted.txt
 
       - name: Commit corrected Markdown, generated LaTeX and PDF
