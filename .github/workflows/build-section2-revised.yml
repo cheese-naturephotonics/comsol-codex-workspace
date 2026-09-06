@@ -26,6 +26,19 @@ jobs:
           ref: chatgpt-section2-revised-20260906
           fetch-depth: 0
 
+      - name: Correct the boundary-condition symbol in the Markdown source
+        run: |
+          python3 - <<'PY'
+          from pathlib import Path
+          p = Path('paper_section2/第二节_统一有限箱体多模与旋转对称选模理论_修订版.md')
+          text = p.read_text(encoding='utf-8')
+          old = r'\nu_n^{(R)}(R_{\max},\phi)=0.'
+          new = r'u_n^{(R)}(R_{\max},\phi)=0.'
+          if old not in text:
+              raise SystemExit('Expected source typo was not found; refusing a silent build.')
+          p.write_text(text.replace(old, new, 1), encoding='utf-8')
+          PY
+
       - name: Install Pandoc and XeLaTeX
         run: |
           sudo apt-get update
@@ -64,19 +77,21 @@ jobs:
           pdftotext '第二节_统一有限箱体多模与旋转对称选模理论_修订版.pdf' extracted.txt
           grep -q '统一有限箱体多模' extracted.txt
           grep -q '精确有限箱体共旋转多模' extracted.txt
+          grep -q 'u_n' '第二节_统一有限箱体多模与旋转对称选模理论_修订版.md'
           rm -f extracted.txt
 
-      - name: Commit generated TeX and PDF
+      - name: Commit corrected Markdown, generated LaTeX and PDF
         run: |
           git config user.name 'ChatGPT Artifact Builder'
           git config user.email 'actions@users.noreply.github.com'
           git add \
+            'paper_section2/第二节_统一有限箱体多模与旋转对称选模理论_修订版.md' \
             'paper_section2/第二节_统一有限箱体多模与旋转对称选模理论_修订版.tex' \
             'paper_section2/第二节_统一有限箱体多模与旋转对称选模理论_修订版.pdf'
           if git diff --cached --quiet; then
             echo 'No generated-file changes to commit.'
           else
-            git commit -m 'Build revised Section 2 TeX and PDF'
+            git commit -m 'Build corrected revised Section 2 artifacts'
             git push origin HEAD:chatgpt-section2-revised-20260906
           fi
 
